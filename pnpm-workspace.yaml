@@ -1,0 +1,14 @@
+packages:
+  - backend
+  - frontend
+  - chatgpt
+autoInstallPeers: false
+allowBuilds:
+  esbuild: true
+  workerd: true
+  sharp: true
+engineStrict: true
+saveExact: true
+enableGlobalVirtualStore: false
+overrides:
+  vite: 8.1.5

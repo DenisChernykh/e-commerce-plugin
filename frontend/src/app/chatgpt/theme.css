@@ -1,0 +1,16 @@
+[data-theme='dark'] {
+  --background: #20251f;
+  --foreground: #f2f0e8;
+  --card: #282e26;
+  --card-foreground: #f2f0e8;
+  --primary: #d6dfc7;
+  --primary-foreground: #20251f;
+  --secondary: #333b30;
+  --secondary-foreground: #e4e8dc;
+  --muted: #333b30;
+  --muted-foreground: #b6bdad;
+  --accent: #333b30;
+  --border: #4b5545;
+  --input: #5a6553;
+  --destructive: #ffaaa3;
+}

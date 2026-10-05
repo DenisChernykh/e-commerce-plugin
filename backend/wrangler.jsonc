@@ -1,0 +1,33 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "tiho-api-local",
+  "account_id": "957388230aa7bf90d15b1bb81fbd5308",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "vars": { "BUILD_REVISION": "local" },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "tiho-catalog",
+      "database_id": "8501a948-1c4f-45a8-8346-f2ed855355ca",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "observability": { "enabled": true, "logs": { "invocation_logs": false } },
+  "env": {
+    "production": {
+      "name": "tiho-api",
+      "vars": { "BUILD_REVISION": "0.1.0" },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "tiho-catalog",
+          "database_id": "8501a948-1c4f-45a8-8346-f2ed855355ca",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "observability": { "enabled": true, "logs": { "invocation_logs": false } }
+    }
+  }
+}

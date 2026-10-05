@@ -1,0 +1,33 @@
+{
+  "name": "tiho-store",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.15.1",
+  "engines": {
+    "node": ">=24 <25",
+    "pnpm": "11.15.1"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:api": "pnpm --filter @tiho/backend dev",
+    "dev:ui": "pnpm --filter @tiho/frontend dev",
+    "build": "pnpm --filter @tiho/frontend build && pnpm --filter @tiho/backend deploy:dry-run && pnpm chatgpt:build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm --filter @tiho/backend format:check && pnpm --filter @tiho/frontend lint",
+    "format": "pnpm -r format",
+    "test": "pnpm -r test",
+    "boundaries:check": "pnpm --filter @tiho/backend boundaries:check && pnpm --filter @tiho/frontend architecture",
+    "api:update": "pnpm --filter @tiho/frontend api:update",
+    "api:check": "pnpm --filter @tiho/frontend api:check",
+    "db:generate": "pnpm --filter @tiho/backend db:generate",
+    "db:migrate:local": "pnpm --filter @tiho/backend db:migrate:local",
+    "db:seed:local": "pnpm --filter @tiho/backend db:seed:local",
+    "db:migrate:remote": "pnpm --filter @tiho/backend db:migrate:remote",
+    "db:seed:remote": "pnpm --filter @tiho/backend db:seed:remote",
+    "deploy:api": "pnpm --filter @tiho/backend run deploy",
+    "check": "pnpm api:check && pnpm --filter @tiho/backend check && pnpm --filter @tiho/frontend check && pnpm --filter @tiho/chatgpt check",
+    "chatgpt:build": "pnpm --filter @tiho/chatgpt build",
+    "chatgpt:dev": "pnpm --filter @tiho/chatgpt dev"
+  }
+}

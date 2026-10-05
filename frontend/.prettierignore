@@ -1,0 +1,10 @@
+node_modules
+.next
+.vercel
+coverage
+next-env.d.ts
+openapi/openapi.json
+pnpm-lock.yaml
+
+dist-chatgpt/
+public/plugins/

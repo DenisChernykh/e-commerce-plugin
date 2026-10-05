@@ -1,0 +1,25 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>TIHO — тестовый MCP Apps host</title>
+<style>body{margin:0;font:14px system-ui;background:#faf9f6}header{padding:12px;border-bottom:1px solid #ddd}iframe{border:0;width:100%;height:90vh}details{padding:12px}pre{white-space:pre-wrap}</style>
+<header>Тестовый MCP Apps host · реальные данные API · это не ChatGPT</header>
+<iframe title="TIHO MCP UI" src="/ui.html" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+<details><summary>Контекст, отправленный модели</summary><pre id="context"></pre></details>
+<script>
+let nextId=1;
+async function tool(name,args){const response=await fetch('/mcp',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json, text/event-stream'},body:JSON.stringify({jsonrpc:'2.0',id:nextId++,method:'tools/call',params:{name,arguments:args}})});const payload=await response.json();if(payload.error)throw Error(payload.error.message);return payload.result;}
+const frame=document.querySelector('iframe');
+window.tihoShow=async(args)=>{frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{arguments:args}},location.origin);const result=await tool('open_store',args);frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:result},location.origin);return result;};
+window.addEventListener('message',async(event)=>{
+ if(event.source!==frame.contentWindow||event.origin!==location.origin)return;
+ const m=event.data;if(m?.jsonrpc!=='2.0')return;
+ const send=(result)=>event.source.postMessage({jsonrpc:'2.0',id:m.id,result},location.origin);
+ try {
+ if(m.method==='ui/initialize'){send({protocolVersion:'2026-01-26',hostInfo:{name:'TIHO local test host',version:'1.0.0'},hostCapabilities:{serverTools:{},openLinks:{},updateModelContext:{},message:{text:{}},logging:{}},hostContext:{theme:'light',displayMode:'inline',availableDisplayModes:['inline','fullscreen']}});}
+ else if(m.method==='ui/notifications/initialized'){const result=await tool('open_store',{});event.source.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:result},location.origin);}
+ else if(m.method==='tools/call')send(await tool(m.params.name,m.params.arguments));
+ else if(m.method==='ui/update-model-context'){window.tihoContext=m.params.structuredContent;document.querySelector('#context').textContent=JSON.stringify(m.params,null,2);send({});}
+ else if(m.method==='ui/open-link'){window.open(m.params.url,'_blank','noopener');send({});}
+ else if(m.method==='ui/request-display-mode')send({mode:m.params.mode});
+ else if(m.id!==undefined)send({});
+ }catch(error){event.source.postMessage({jsonrpc:'2.0',id:m.id,error:{code:-32603,message:error.message}},location.origin);}
+});
+</script></html>

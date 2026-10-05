@@ -1,0 +1,16 @@
+**/node_modules/**
+**/.next/**
+**/.wrangler/**
+**/.vercel/**
+**/.seed/**
+**/.env*
+**/.dev.vars*
+**/coverage/**
+**/dist/**
+**/*.tsbuildinfo
+**/.DS_Store
+.git/**
+artifacts/**
+**/dist-chatgpt/**
+.sites-export/**
+.sites-runtime/**
