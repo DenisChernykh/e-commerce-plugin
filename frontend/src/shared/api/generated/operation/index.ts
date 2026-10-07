@@ -6,6 +6,13 @@
  * OpenAPI spec version: 0.1.0
  */
 
+export * from './changeCartBody'
+export * from './createOrderBody'
+export * from './createShoppingLinkBody'
+export * from './exchangeShoppingLinkBody'
 export * from './getCatalogFacetsParams'
 export * from './getRelatedProductsParams'
 export * from './listProductsParams'
+export * from './prepareCheckoutBody'
+export * from './startPaymentBody'
+export * from './startShoppingSessionBody'

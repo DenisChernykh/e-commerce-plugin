@@ -7,6 +7,8 @@
 let nextId=1;
 async function tool(name,args){const response=await fetch('/mcp',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json, text/event-stream'},body:JSON.stringify({jsonrpc:'2.0',id:nextId++,method:'tools/call',params:{name,arguments:args}})});const payload=await response.json();if(payload.error)throw Error(payload.error.message);return payload.result;}
 const frame=document.querySelector('iframe');
+window.tihoTool=tool;
+window.tihoShowCheckout=async(args)=>{sessionStorage.setItem('tiho-preview-checkout',JSON.stringify(args));frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{arguments:args}},location.origin);const result=await tool('open_checkout',args);frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:result},location.origin);return result;};
 window.tihoShow=async(args)=>{frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{arguments:args}},location.origin);const result=await tool('open_store',args);frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:result},location.origin);return result;};
 window.addEventListener('message',async(event)=>{
  if(event.source!==frame.contentWindow||event.origin!==location.origin)return;
@@ -14,7 +16,7 @@ window.addEventListener('message',async(event)=>{
  const send=(result)=>event.source.postMessage({jsonrpc:'2.0',id:m.id,result},location.origin);
  try {
  if(m.method==='ui/initialize'){send({protocolVersion:'2026-01-26',hostInfo:{name:'TIHO local test host',version:'1.0.0'},hostCapabilities:{serverTools:{},openLinks:{},updateModelContext:{},message:{text:{}},logging:{}},hostContext:{theme:'light',displayMode:'inline',availableDisplayModes:['inline','fullscreen']}});}
- else if(m.method==='ui/notifications/initialized'){const result=await tool('open_store',{});event.source.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:result},location.origin);}
+ else if(m.method==='ui/notifications/initialized'){const saved=sessionStorage.getItem('tiho-preview-checkout');const result=await tool(saved?'open_checkout':'open_store',saved?JSON.parse(saved):{});event.source.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:result},location.origin);}
  else if(m.method==='tools/call')send(await tool(m.params.name,m.params.arguments));
  else if(m.method==='ui/update-model-context'){window.tihoContext=m.params.structuredContent;document.querySelector('#context').textContent=JSON.stringify(m.params,null,2);send({});}
  else if(m.method==='ui/open-link'){window.open(m.params.url,'_blank','noopener');send({});}

@@ -1,0 +1,6 @@
+# Local-only secret, also set TIHO_MCP_SECRET to the same generated value in chatgpt/.env.
+# Generate with: node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+TIHO_MCP_SECRET=replace-with-a-random-secret-at-least-32-characters
+# wrangler.jsonc explicitly enables the local adapter. Optional local override:
+# PAYMENT_OUTCOME=fail_once
+# PAYMENT_DELAY_MS=2500

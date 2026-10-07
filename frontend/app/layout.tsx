@@ -4,6 +4,7 @@ import type { ReactNode } from 'react'
 import { QueryProvider } from '@/app/config/query-provider'
 import '@/app/styles/index.css'
 import { StoreShell } from '@/widgets/store-shell'
+import { ShoppingProvider } from '@/features/shopping'
 
 export const metadata: Metadata = {
   title: { default: 'TIHO — искусство быть дома', template: '%s · TIHO' },
@@ -17,7 +18,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="ru">
       <body>
         <QueryProvider>
-          <StoreShell>{children}</StoreShell>
+          <ShoppingProvider>
+            <StoreShell>{children}</StoreShell>
+          </ShoppingProvider>
         </QueryProvider>
       </body>
     </html>

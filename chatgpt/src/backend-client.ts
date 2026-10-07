@@ -1,6 +1,12 @@
 import type { z } from "zod";
 
-export type Environment = { CATALOG_API_URL?: string; STORE_URL?: string };
+export type Environment = {
+  CATALOG_API_URL?: string;
+  STORE_URL?: string;
+  TIHO_MCP_SECRET?: string;
+  MCP_AUTH_MODE?: string;
+  DEV_MCP_USER?: string;
+};
 export type BackendFetch = typeof fetch;
 export const DEFAULT_API = "https://tiho-api.tiho-backend.workers.dev";
 export const DEFAULT_STORE = "https://tiho-store.vercel.app";
@@ -14,7 +20,11 @@ export class CatalogError extends Error {
     super(message);
   }
 }
-export function createBackendClient(env: Environment, fetchBackend: BackendFetch) {
+export function createBackendClient(
+  env: Environment,
+  fetchBackend: BackendFetch,
+  credentials: Record<string, string> = {},
+) {
   const base = new URL(env.CATALOG_API_URL || DEFAULT_API);
   const store = new URL(env.STORE_URL || DEFAULT_STORE);
   for (const url of [base, store]) {
@@ -26,12 +36,22 @@ export function createBackendClient(env: Environment, fetchBackend: BackendFetch
   }
   return {
     store,
-    async request<T>(path: string, schema: z.ZodType<T>): Promise<T> {
+    async request<T>(
+      path: string,
+      schema: z.ZodType<T>,
+      body?: unknown,
+      method = "GET",
+    ): Promise<T> {
       let response: Response;
       try {
         response = await fetchBackend(new URL(path, base), {
-          method: "GET",
-          headers: { Accept: "application/json" },
+          method,
+          headers: {
+            Accept: "application/json",
+            ...credentials,
+            ...(body === undefined ? {} : { "Content-Type": "application/json" }),
+          },
+          ...(body === undefined ? {} : { body: JSON.stringify(body) }),
           signal: AbortSignal.timeout(15000),
           redirect: "manual",
         });
@@ -41,6 +61,21 @@ export function createBackendClient(env: Environment, fetchBackend: BackendFetch
         );
       }
       if (!response.ok) {
+        if (path.startsWith("/api/commerce/")) {
+          let data: { code?: string; detail?: string } = {};
+          try {
+            data = (await response.json()) as typeof data;
+          } catch {
+            /* Do not expose upstream HTML. */
+          }
+          throw new CatalogError(
+            response.status >= 500
+              ? "Магазин временно недоступен. Изменение могло сохраниться; проверьте корзину или заказ перед повтором с тем же operationId."
+              : (data.detail?.slice(0, 300) ?? "Проверьте данные и повторите действие."),
+            data.code && /^[A-Z_]{1,64}$/.test(data.code) ? data.code : "COMMERCE_ERROR",
+            response.status,
+          );
+        }
         if (response.status === 404)
           throw new CatalogError(
             "Товар не найден. Проверьте ID или выберите другой товар.",

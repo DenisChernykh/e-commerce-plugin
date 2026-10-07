@@ -5,8 +5,14 @@ const formatter = new Intl.NumberFormat('ru-RU', {
   minimumFractionDigits: 0,
 })
 
-export function formatPrice(price: number) {
-  return formatter.format(price)
+export function formatPrice(price: number, currency = 'RUB') {
+  return currency === 'RUB'
+    ? formatter.format(price)
+    : new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency,
+        maximumFractionDigits: 2,
+      }).format(price)
 }
 
 export function productCount(count: number) {

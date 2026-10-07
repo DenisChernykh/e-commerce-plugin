@@ -41,7 +41,7 @@ export function createWorker(fetchBackend: BackendFetch = fetch, ui = "", skill 
         }
         request = new Request(request, { body });
       }
-      const server = createServer(env, fetchBackend, ui, skill);
+      const server = createServer(env, fetchBackend, ui, skill, request);
       const transport = new WebStandardStreamableHTTPServerTransport({
         sessionIdGenerator: undefined,
         enableJsonResponse: true,

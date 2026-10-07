@@ -4,6 +4,7 @@ import { ArrowUpRight, Menu, Plug, Search } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { CartEntry } from '@/features/shopping'
 
 import { cn } from '@/shared/lib/utils'
 import { routes } from '@/shared/routes'
@@ -19,6 +20,7 @@ import {
 } from '@/shared/ui/sheet'
 
 const navigation = [
+  { href: '/cart', label: 'Корзина' },
   { href: routes.catalog, label: 'Каталог' },
   { href: routes.categories, label: 'Категории' },
   { href: '/#philosophy', label: 'Философия TIHO' },
@@ -60,6 +62,7 @@ export function StoreHeader() {
             ))}
           </nav>
           <div className="flex items-center gap-3">
+            <CartEntry />
             <Link
               href="/catalog#search"
               className="flex size-10 items-center justify-center"

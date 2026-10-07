@@ -33,3 +33,21 @@ export type {
   ToolResult,
   CatalogBridge,
 } from './catalog-mcp'
+
+export {
+  createHttpShoppingClient,
+  createMcpShoppingClient,
+  shoppingRequest,
+  ShoppingError,
+} from './commerce'
+export type {
+  Cart,
+  CartAction,
+  Customer,
+  Quote,
+  Order,
+  Attempt,
+  ShoppingClient,
+  ShoppingTarget,
+  ShoppingScreen,
+} from './commerce'

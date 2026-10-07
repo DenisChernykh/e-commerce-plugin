@@ -49,8 +49,8 @@ export function StoreShell({ children }: { children: ReactNode }) {
             <div>
               <p className="eyebrow mb-5">О магазине</p>
               <p className="max-w-xs text-xs leading-6 text-muted-foreground">
-                Небольшая коллекция для осознанного дома. Сейчас доступен
-                просмотр каталога; покупки появятся позже.
+                Небольшая коллекция для осознанного дома. Предметы для ваших
+                ежедневных ритуалов и тихих моментов.
               </p>
               <Link
                 href="/#philosophy"
@@ -62,7 +62,7 @@ export function StoreShell({ children }: { children: ReactNode }) {
           </div>
           <div className="flex flex-wrap justify-between gap-3 border-t py-5 text-[10px] text-muted-foreground">
             <span>© 2026 TIHO. Пространство для спокойной жизни.</span>
-            <span>Демонстрационный магазин</span>
+            <span>Искусство быть дома</span>
           </div>
         </Container>
       </footer>

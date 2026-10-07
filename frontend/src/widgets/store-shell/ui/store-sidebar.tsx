@@ -1,6 +1,13 @@
 'use client'
 
-import { Grid2X2, House, LayoutGrid, Plug } from 'lucide-react'
+import {
+  Grid2X2,
+  House,
+  LayoutGrid,
+  Plug,
+  ShoppingBag,
+  Package,
+} from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/shared/lib/utils'
@@ -12,6 +19,8 @@ export function StoreSidebar() {
     { href: routes.home, label: 'Главная', icon: House },
     { href: routes.catalog, label: 'Каталог', icon: LayoutGrid },
     { href: routes.categories, label: 'Категории', icon: Grid2X2 },
+    { href: '/cart', label: 'Корзина', icon: ShoppingBag },
+    { href: '/orders', label: 'Мои заказы', icon: Package },
     { href: routes.plugins, label: 'Плагины', icon: Plug },
   ]
   return (

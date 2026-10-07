@@ -3,7 +3,13 @@ import { createServer } from "node:http";
 import worker from "../dist/server/index.js";
 
 const port = Number(process.env.PORT || 8790);
-const env = { CATALOG_API_URL: process.env.CATALOG_API_URL, STORE_URL: process.env.STORE_URL };
+const env = {
+  CATALOG_API_URL: process.env.CATALOG_API_URL,
+  STORE_URL: process.env.STORE_URL,
+  TIHO_MCP_SECRET: process.env.TIHO_MCP_SECRET,
+  MCP_AUTH_MODE: process.env.MCP_AUTH_MODE,
+  DEV_MCP_USER: process.env.DEV_MCP_USER,
+};
 const server = createServer(async (req, res) => {
   try {
     if (req.url === "/preview" || req.url === "/ui.html") {

@@ -1,11 +1,16 @@
 # TIHO — искусство быть дома
 
-Рабочий MVP каталога эстетичных товаров для дома. Next.js frontend и Hono API
-с Cloudflare D1. 72 предмета, 6 категорий, 6 брендов. Покупки, авторизация и
-платежи не входят в продукт. Каталог подключён к ChatGPT через MCP Apps.
+Магазин товаров для дома: Next.js, Hono API, Cloudflare D1 и MCP Apps в ChatGPT.
+72 предмета, 6 категорий, 6 брендов. Корзины, заказы и попытки оплаты сохраняются
+на backend. В презентационном окружении оплата проходит через внутренний адаптер
+без банка и списаний. Публичная витрина пока остаётся каталогом.
 
 Интеграция, сборка, установка и проверочные сценарии:
 [docs/chatgpt-plugin.md](docs/chatgpt-plugin.md).
+Покупательский сценарий, доступ, миграции и платёжные режимы:
+[docs/checkout.md](docs/checkout.md). Фактический статус проверок:
+[docs/checkout-progress.md](docs/checkout-progress.md), подробные свидетельства:
+[docs/checkout-verification.md](docs/checkout-verification.md).
 
 ## Опубликованное demo
 
@@ -55,6 +60,9 @@ pnpm dev
 - Адаптивный интерфейс, мобильные фильтры, loading/empty/error/404 состояния.
 - Поиск по всем значимым данным, включая русский текст и характеристики.
 - Типизированный Orval-клиент и React Query, сгенерированные из backend OpenAPI.
+- Серверная корзина, количество, контакты, проверка заказа, оплата и заказы
+  на сайте и через MCP Apps. Повторы запросов и конкурентные изменения безопасны.
+- Проверка владельца и одноразовый переход из плагина к своей корзине на сайте.
 
 Фотографии ожидаются позже. Сейчас используются локальные SVG-иллюстрации;
 товары с фотографиями автоматически используют `ProductImage.url` и галерею.
@@ -66,11 +74,12 @@ pnpm dev
 backend/
   src/app/                 сборка Hono-приложения
   src/modules/catalog/    domain / application / infrastructure / presentation
+  src/modules/commerce/   корзина, checkout, заказы, сессии и внутренний адаптер
   src/platform/           D1 schema, config, HTTP Problem Details
   migrations/             SQL-миграции Drizzle
   seed/                   данные 72 товаров и SQL upsert
   test/                   HTTP integration tests в Workers/D1
-  wrangler.jsonc          local/production окружения
+  wrangler.jsonc          local/presentation/production окружения
 frontend/
   app/                    Next App Router entrypoints
   src/app/                QueryProvider, styles
@@ -119,11 +128,8 @@ Backend tests создают отдельную локальную D1 и при�
 `deploy:dry-run` не публикует Worker. Для production Next локально после
 `pnpm build`: `pnpm --filter @tiho/frontend start` при работающем API.
 
-Итог проверки: `pnpm check` проходит, 19 backend + 9 frontend tests, Orval
-без рассинхронизации. Steiger выдаёт 3 рекомендательных `insignificant-slice`
-предупреждения, без ошибок границ. Проверены поиск, фильтры, история URL,
-пагинация, товары, категории и мобильная панель в браузере; production API
-и Next proxy дополнительно проверены HTTP-запросами.
+Актуальные результаты и границы проверки (включая отличие локального MCP host
+от настоящего ChatGPT) записаны в [checkout-progress.md](docs/checkout-progress.md).
 
 ## Размещение
 
@@ -131,13 +137,12 @@ Backend — Cloudflare Workers + D1 через Wrangler, как в Planner. Fron
 Vercel, Root Directory `frontend`, Node 24, `API_BASE_URL` на адрес Worker.
 Подробная последовательность: [docs/deployment.md](docs/deployment.md).
 
-Backend публичный read-only; CORS разрешает внешним клиентам GET.
+Публичный каталог доступен на чтение; commerce требует подтверждённой сессии.
 Browser requests идут через Next rewrite, серверные страницы обращаются
 напрямую к тому же API. Конфиденциальных ключей API в браузере нет.
 
 ## Следующие этапы
 
-Фотографии и реальные данные; затем по необходимости корзина, заказы,
-identity/auth, оплаты, остатки, admin, AI-поиск и MCP/ChatGPT. Сейчас нет
-фиктивных кнопок покупки, публичных write endpoint'ов, очередей, Redis,
-микросервисов, аналитики или избыточной инфраструктуры.
+Настоящий платёжный провайдер, доставка, резервирование, списание остатков,
+чеки и уведомления не реализованы и не имитируются. Публичный торговый запуск
+требует отдельного решения и не входит в эту работу.

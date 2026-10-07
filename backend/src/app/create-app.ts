@@ -1,6 +1,7 @@
 import { createRoute, OpenAPIHono, z } from "@hono/zod-openapi";
 import { cors } from "hono/cors";
 import { createCatalogModule } from "../modules/catalog";
+import { createCommerceModule } from "../modules/commerce";
 import { readRuntimeConfig } from "../platform/config/runtime-config";
 import type { WorkerHttpEnv } from "../platform/http/environment";
 import { problem, problemDetailsSchema } from "../platform/http/problem-details";
@@ -50,6 +51,7 @@ export function createApp() {
       ),
   );
   app.route("/", createCatalogModule().router);
+  app.route("/", createCommerceModule().router);
   app.get("/openapi.json", (context) =>
     context.json(
       app.getOpenAPI31Document({

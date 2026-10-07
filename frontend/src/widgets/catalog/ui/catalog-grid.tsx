@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight, SlidersHorizontal } from 'lucide-react'
 import { useState } from 'react'
 
 import { ProductCard, useCatalogFacets, useProducts } from '@/entities/product'
+import { AddToCart } from '@/features/shopping'
 import {
   ActiveFilters,
   FilterPanel,
@@ -243,7 +244,16 @@ export function CatalogGrid() {
               style={{ opacity: products.isPlaceholderData ? 0.5 : 1 }}
             >
               {data?.items.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  action={
+                    <AddToCart
+                      productId={product.id}
+                      available={product.availability === 'in_stock'}
+                    />
+                  }
+                />
               ))}
             </div>
           )}

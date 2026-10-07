@@ -1,5 +1,6 @@
 import { ArrowRight, ArrowUpRight, Leaf, Minus, Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import { AddToCart } from '@/features/shopping'
 
 import {
   loadCategories,
@@ -150,7 +151,16 @@ export async function HomePage() {
           </div>
           <div className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
             {featured.items.slice(0, 4).map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                action={
+                  <AddToCart
+                    productId={product.id}
+                    available={product.availability === 'in_stock'}
+                  />
+                }
+              />
             ))}
           </div>
         </section>

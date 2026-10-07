@@ -5,6 +5,7 @@ import {
   SlidersHorizontal,
 } from 'lucide-react'
 import { useEffect, useState, useSyncExternalStore } from 'react'
+import { AddToCart, CartEntry, useShopping } from '@/features/shopping'
 import {
   ProductCardContent,
   ProductImage,
@@ -45,6 +46,10 @@ function ProductDetails({
         <p className="eyebrow">{product.brand.name}</p>
         <h2 className="font-serif text-4xl">{product.name}</h2>
         <p className="text-lg">{formatPrice(product.price)}</p>
+        <AddToCart
+          productId={product.id}
+          available={product.availability === 'in_stock'}
+        />
         <p className="text-sm">
           {product.availability === 'in_stock' ? 'В наличии' : 'Нет в наличии'}
         </p>
@@ -81,6 +86,7 @@ export function ChatgptCatalog({
   controller: CatalogController
   bridge: CatalogBridge
 }) {
+  const { controller: shopping } = useShopping()
   const state = useSyncExternalStore(
     controller.subscribe,
     controller.getSnapshot,
@@ -142,6 +148,7 @@ export function ChatgptCatalog({
           </p>
         </div>
         <div className="flex gap-2">
+          <CartEntry onClick={() => shopping.open({ screen: 'cart' })} />
           {(state.history.length > 0 ||
             state.previousSelections.length > 0 ||
             (data?.view !== 'catalog' &&
@@ -314,6 +321,10 @@ export function ChatgptCatalog({
                       >
                         <ProductCardContent product={product} />
                       </button>
+                      <AddToCart
+                        productId={product.id}
+                        available={product.availability === 'in_stock'}
+                      />
                       {!product.images.length && (
                         <p className="mt-2 text-[10px] text-muted-foreground">
                           Иллюстрация
@@ -449,6 +460,10 @@ export function ChatgptCatalog({
                       >
                         Открыть <ArrowUpRight className="size-4" />
                       </Button>
+                      <AddToCart
+                        productId={p.id}
+                        available={p.availability === 'in_stock'}
+                      />
                     </td>
                   ))}
                 </tr>

@@ -16,11 +16,19 @@ export const problemDetailsSchema = z
 
 export function problem(
   c: Context<WorkerHttpEnv>,
-  status: 400 | 404 | 500,
+  status: 400 | 401 | 403 | 404 | 409 | 500 | 503,
   code: string,
   detail: string,
 ) {
-  const titles = { 400: "Invalid request", 404: "Not found", 500: "Internal server error" };
+  const titles = {
+    400: "Invalid request",
+    401: "Authentication required",
+    403: "Forbidden",
+    404: "Not found",
+    409: "Conflict",
+    500: "Internal server error",
+    503: "Service unavailable",
+  };
   return c.json(
     {
       type: `urn:tiho:problem:${code.toLowerCase().replaceAll("_", "-")}`,

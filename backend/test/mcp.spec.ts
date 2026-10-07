@@ -48,11 +48,19 @@ async function search(args: Record<string, unknown> = {}) {
 }
 
 describe("MCP → application API → actual D1", () => {
-  it("publishes strict read-only tools, instructions and optional UI resources", async () => {
+  it("publishes strict tools with accurate write annotations, instructions and optional UI", async () => {
     const discovery = await rpc("tools/list");
-    expect(discovery.result.tools).toHaveLength(6);
+    expect(discovery.result.tools).toHaveLength(16);
     for (const tool of discovery.result.tools ?? []) {
-      expect(tool.annotations.readOnlyHint).toBe(true);
+      expect(tool.annotations.readOnlyHint).toBe(
+        ![
+          "update_cart",
+          "prepare_checkout",
+          "create_order",
+          "start_payment",
+          "store_link",
+        ].includes(tool.name),
+      );
       expect(tool.inputSchema.additionalProperties).toBe(false);
       expect(tool.outputSchema).toBeDefined();
     }

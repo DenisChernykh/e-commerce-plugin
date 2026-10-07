@@ -14,6 +14,7 @@ export type ProductResult = z.infer<typeof productOutput>
 export type ComparisonResult = z.infer<typeof productsOutput>
 export type CatalogData = CatalogResult | ProductResult | ComparisonResult
 export type ToolResult = {
+  _meta?: Record<string, unknown>
   isError?: boolean
   structuredContent?: Record<string, unknown>
   content?: { type: string; text?: string }[]

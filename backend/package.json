@@ -42,6 +42,7 @@
     "wrangler": "4.127.1"
   },
   "exports": {
-    "./catalog-contracts": "./src/modules/catalog/public-contracts.ts"
+    "./catalog-contracts": "./src/modules/catalog/public-contracts.ts",
+    "./commerce-contracts": "./src/modules/commerce/public-contracts.ts"
   }
 }

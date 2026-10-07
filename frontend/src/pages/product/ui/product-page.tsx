@@ -12,6 +12,7 @@ import { ApiProblemError } from '@/shared/api'
 import { formatPrice } from '@/shared/lib/format'
 import { routes } from '@/shared/routes'
 import { Container } from '@/shared/ui/container'
+import { AddToCart } from '@/features/shopping'
 
 export async function ProductPage({ slug }: { slug: string }) {
   let product
@@ -62,6 +63,10 @@ export async function ProductPage({ slug }: { slug: string }) {
             {product.shortDescription}
           </p>
           <p className="mt-7 text-2xl">{formatPrice(product.price)}</p>
+          <AddToCart
+            productId={product.id}
+            available={product.availability === 'in_stock'}
+          />
           <p className="mt-4 flex items-center gap-2 text-xs">
             {product.availability === 'in_stock' ? (
               <>
@@ -114,10 +119,6 @@ export async function ProductPage({ slug }: { slug: string }) {
             Все предметы категории «{product.category.name}»
             <ArrowUpRight className="size-4" />
           </Link>
-          <p className="mt-6 text-[11px] leading-6 text-muted-foreground">
-            Сейчас TIHO работает как каталог. Возможность покупки появится
-            позже.
-          </p>
         </div>
       </div>
       {related.items.length > 0 && (
@@ -132,7 +133,16 @@ export async function ProductPage({ slug }: { slug: string }) {
           </div>
           <div className="grid grid-cols-2 gap-x-5 gap-y-10 lg:grid-cols-4">
             {related.items.map((item) => (
-              <ProductCard key={item.id} product={item} />
+              <ProductCard
+                key={item.id}
+                product={item}
+                action={
+                  <AddToCart
+                    productId={item.id}
+                    available={item.availability === 'in_stock'}
+                  />
+                }
+              />
             ))}
           </div>
         </section>

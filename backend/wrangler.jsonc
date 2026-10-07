@@ -5,7 +5,15 @@
   "main": "src/index.ts",
   "compatibility_date": "2026-09-01",
   "compatibility_flags": ["nodejs_compat"],
-  "vars": { "BUILD_REVISION": "local" },
+  "vars": {
+    "BUILD_REVISION": "local",
+    "APP_ENV": "local",
+    "GUEST_ACCESS": "local",
+    "STORE_ORIGINS": "http://localhost:3000,http://127.0.0.1:3000",
+    "PAYMENT_ADAPTER": "internal_presentation",
+    "PAYMENT_OUTCOME": "success",
+    "PAYMENT_DELAY_MS": "1800"
+  },
   "d1_databases": [
     {
       "binding": "DB",
@@ -14,11 +22,24 @@
       "migrations_dir": "migrations"
     }
   ],
-  "observability": { "enabled": true, "logs": { "invocation_logs": false } },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "invocation_logs": false
+    }
+  },
   "env": {
     "production": {
       "name": "tiho-api",
-      "vars": { "BUILD_REVISION": "0.1.0" },
+      "vars": {
+        "BUILD_REVISION": "0.2.0",
+        "APP_ENV": "production",
+        "GUEST_ACCESS": "linked",
+        "STORE_ORIGINS": "https://tiho-store.vercel.app",
+        "PAYMENT_ADAPTER": "disabled",
+        "PAYMENT_OUTCOME": "success",
+        "PAYMENT_DELAY_MS": "1800"
+      },
       "d1_databases": [
         {
           "binding": "DB",
@@ -27,7 +48,47 @@
           "migrations_dir": "migrations"
         }
       ],
-      "observability": { "enabled": true, "logs": { "invocation_logs": false } }
+      "observability": {
+        "enabled": true,
+        "logs": {
+          "invocation_logs": false
+        }
+      },
+      "secrets": {
+        "required": []
+      }
+    },
+    "presentation": {
+      "name": "tiho-api-presentation",
+      "vars": {
+        "BUILD_REVISION": "0.2.0",
+        "APP_ENV": "presentation",
+        "GUEST_ACCESS": "linked",
+        "STORE_ORIGINS": "https://tiho-store-4y58lcfiw-denis-projects-91ecd61e.vercel.app",
+        "PAYMENT_ADAPTER": "internal_presentation",
+        "PAYMENT_OUTCOME": "success",
+        "PAYMENT_DELAY_MS": "1800"
+      },
+      "secrets": {
+        "required": ["TIHO_MCP_SECRET"]
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "tiho-catalog",
+          "database_id": "8501a948-1c4f-45a8-8346-f2ed855355ca",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "observability": {
+        "enabled": true,
+        "logs": {
+          "invocation_logs": false
+        }
+      }
     }
+  },
+  "secrets": {
+    "required": ["TIHO_MCP_SECRET"]
   }
 }
