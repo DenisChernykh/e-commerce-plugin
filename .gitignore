@@ -17,3 +17,9 @@ artifacts/
 dist-chatgpt/
 .sites-export/
 .sites-runtime/
+.env
+.env.local
+.env.production
+.dev.vars
+*.log
+!*.example
